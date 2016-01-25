@@ -1,14 +1,30 @@
 console.log('it works');
 
 
-var http = require('http');
+var express = require('express');
+var app = express();
 
-var server = http.createServer(function (req, res) {
-  res.write('dupa');
-  res.end();
+
+app.get('/', function (req, res, next) {
+  console.log('only for root / GET request');
+  next();
+}, function (req, res) {
+  res.send('Hello World!');
 });
 
-server.listen(3000, function () {
-  console.log('server started');
+app.use(function (req, res, next) {
+  console.log('incoming request!');
+  next();
+});
+
+app.use(function (req, res, next) {
+  console.log('incoming request second middleware!');
+  next();
+});
+
+
+
+app.listen(3000, function () {
+  console.log('Example app listening on port 3000!');
 });
 
