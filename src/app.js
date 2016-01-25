@@ -1,13 +1,10 @@
-console.log('it works');
-
-
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 
 app.use(bodyParser.json());
 
-app.get('/', function (req, res) {
+app.get('/', function () {
   //res.send('Hello World!');
   throw new Error('dd');
 });
@@ -38,7 +35,5 @@ app.use(function (err, req, res, next) {
   next(err);
 });
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
-});
 
+module.exports = app;
