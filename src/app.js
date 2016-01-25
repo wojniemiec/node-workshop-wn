@@ -17,14 +17,15 @@ app.get('/', function () {
   throw new Error('dd');
 });
 
-app.get('/stock', function (req, res) {
+app.get('/stock', function (req, res, next) {
   dbPromise
     .then(function (collection) {
       return collection.find({}).toArray();
     })
     .then(function (books) {
       return res.json(books);
-    });
+    })
+    .catch(next);
 });
 
 app.post('/stock', function (req, res) {
