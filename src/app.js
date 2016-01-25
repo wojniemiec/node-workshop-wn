@@ -1,67 +1,37 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-var stockRepository = require('./repository/stock-repository');
 
-var app = express();
 
-app.use(bodyParser.json());
+module.exports = function (stockRepository) {
+  var routes = require('./routes')(stockRepository);
+  var app = express();
 
-app.get('/', function () {
-  //res.send('Hello World!');
-  throw new Error('not an active endpoint, he he');
-});
+  app.use(bodyParser.json());
 
-app.get('/stock/:isbn', function (req, res, next) {
-  var isbn = req.params.isbn;
-  stockRepository.getBook(isbn)
-    .then(function (book) {
-      if (!book) {
-        res.status(404).send('book with isbn ' + isbn + ' not found');
-        return;
-      }
-      return res.json(book.count);
-    })
-    .catch(next);
-});
+  app.get('/stock/:isbn', routes.getCount);
+  app.get('/stock', routes.getAllBooks);
+  app.post('/stock', routes.saveOrUpdateBook);
 
-app.get('/stock', function (req, res, next) {
-  stockRepository.getAllBooks()
-    .then(function (books) {
-      return res.json(books);
-    })
-    .catch(next);
-});
-
-app.post('/stock', function (req, res) {
-  var isbn = req.body.isbn;
-  var count = req.body.count;
-
-  stockRepository.saveOrUpdateBook(isbn, count)
-    .then(function () {
-      return res.json({isbn: isbn, count: count});
+  app.use(function (req, res, next) {
+    res.status(404).send({
+      message: 'not fouuund',
+      code: 404
     });
-});
-
-
-app.use(function (req, res, next) {
-  res.status(404).send({
-    message: 'not fouuund',
-    code: 404
+    next();
   });
-  next();
-});
 
-app.use(function (err, req, res, next) {
-  console.error(err.stack);
-  res
-    .status(err.status || 500)
-    .json({
-      message: 'server errorek',
-      error: (process.env.NODE_ENV === 'production') ? {} : err.stack
-    });
+  app.use(function (err, req, res, next) {
+    console.error(err.stack);
+    res
+      .status(err.status || 500)
+      .json({
+        message: 'server errorek',
+        error: (process.env.NODE_ENV === 'production') ? {} : err.stack
+      });
 
-  next(err);
-});
+    next(err);
+  });
 
+  return app;
 
-module.exports = app;
+};

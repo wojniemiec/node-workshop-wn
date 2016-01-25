@@ -1,7 +1,9 @@
 var request = require('supertest');
 var assert = require('assert');
 
-var app = require('../src/app');
+var mockStockRepo = require('./mocks/stock-repository-mock')();
+
+var app = require('../src/app')(mockStockRepo);
 
 describe('stock', function () {
   it('should respond to POST stock', function (done) {
