@@ -24,7 +24,14 @@ function saveOrUpdateBook(isbn, count) {
     });
 }
 
+function getBook(isbn) {
+  return dbPromise.then(function (collection) {
+    return collection.find({isbn: isbn}).limit(1).next();
+  })
+}
+
 module.exports = {
   getAllBooks: getAllBooks,
-  saveOrUpdateBook: saveOrUpdateBook
+  saveOrUpdateBook: saveOrUpdateBook,
+  getBook: getBook
 };

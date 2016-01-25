@@ -11,6 +11,19 @@ app.get('/', function () {
   throw new Error('not an active endpoint, he he');
 });
 
+app.get('/stock/:isbn', function (req, res, next) {
+  var isbn = req.params.isbn;
+  stockRepository.getBook(isbn)
+    .then(function (book) {
+      if (!book) {
+        res.status(404).send('book with isbn ' + isbn + ' not found');
+        return;
+      }
+      return res.json(book.count);
+    })
+    .catch(next);
+});
+
 app.get('/stock', function (req, res, next) {
   stockRepository.getAllBooks()
     .then(function (books) {
