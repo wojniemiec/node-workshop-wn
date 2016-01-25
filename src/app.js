@@ -1,27 +1,18 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var stockRepository = require('./repository/stock-repository');
+
 var app = express();
-var MongoClient = require('mongodb').MongoClient;
-
-var url = 'mongodb://localhost:27017/books';
-
-var connectionPromise = MongoClient.connect(url);
-var dbPromise = connectionPromise.then(function (db) {
-  return db.collection('books');
-});
 
 app.use(bodyParser.json());
 
 app.get('/', function () {
   //res.send('Hello World!');
-  throw new Error('dd');
+  throw new Error('not an active endpoint, he he');
 });
 
 app.get('/stock', function (req, res, next) {
-  dbPromise
-    .then(function (collection) {
-      return collection.find({}).toArray();
-    })
+  stockRepository.getAllBooks()
     .then(function (books) {
       return res.json(books);
     })
@@ -32,13 +23,7 @@ app.post('/stock', function (req, res) {
   var isbn = req.body.isbn;
   var count = req.body.count;
 
-  dbPromise
-    .then(function (collection) {
-      return collection.updateOne({isbn: isbn}, {
-        isbn: isbn,
-        count: count
-      }, {upsert: true});
-    })
+  stockRepository.saveOrUpdateBook(isbn, count)
     .then(function () {
       return res.json({isbn: isbn, count: count});
     });
