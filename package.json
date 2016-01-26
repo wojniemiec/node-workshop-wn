@@ -8,7 +8,8 @@
     "test": "mocha",
     "lint": "jshint --exclude=node_modules/** src/**.js",
     "test:xunit": "npm run test -- --reporter xunit",
-    "watch": "nodemon src/index.js"
+    "watch": "nodemon src/index.js",
+    "heroku-test": "node infrastructure/test.js"
   },
   "author": "Wojciech Niemiec",
   "license": "ISC",
