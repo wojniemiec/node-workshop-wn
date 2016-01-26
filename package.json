@@ -4,10 +4,11 @@
   "description": "Stock Inventory",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index.js",
+    "start": "node src/index.js",
     "test": "mocha",
     "lint": "jshint --exclude=node_modules/** src/**.js",
-    "test:xunit": "npm run test -- --reporter xunit"
+    "test:xunit": "npm run test -- --reporter xunit",
+    "watch": "nodemon src/index.js"
   },
   "author": "Wojciech Niemiec",
   "license": "ISC",
@@ -18,8 +19,9 @@
     "mongodb": "2.1.4"
   },
   "devDependencies": {
-    "jshint": "^2.9.1",
-    "mocha": "^2.3.4",
+    "jshint": "2.9.1",
+    "mocha": "2.3.4",
+    "nodemon": "1.8.1",
     "supertest": "^1.1.0"
   }
 }
