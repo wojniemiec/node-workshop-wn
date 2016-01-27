@@ -8,7 +8,18 @@ module.exports = function (stockRepository) {
             res.status(404).send('book with isbn ' + isbn + ' not found');
             return;
           }
-          return res.json(book.count);
+
+          res.format({
+            'text/html': function () {
+              res.send('<span>' + book.count + '</span>');
+            },
+            'application/json': function () {
+              res.json(book.count);
+            },
+            'default': function () {
+              res.json(book.count);
+            }
+          });
         })
         .catch(next);
     },
